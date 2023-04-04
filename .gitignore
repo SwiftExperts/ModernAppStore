@@ -146,4 +146,9 @@ iOSInjectionProject/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+## Geunsu Specific
+geunsu/**/Derived
+geunsu/**/*.xcworkspace
+geunsu/**/*.xcodeproj
+
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,macos,git
