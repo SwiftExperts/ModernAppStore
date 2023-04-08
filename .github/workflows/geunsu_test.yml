@@ -1,0 +1,21 @@
+name: Run Test on geunsu branch
+on:  
+  pull_request:
+      branches: [ "develop/geunsu/*" ]
+jobs:
+  test:    
+    runs-on: macos-latest    
+    steps:    
+      - uses: actions/checkout@v3    
+      - name: Install Tuist
+        run: curl -Ls https://install.tuist.io | bash
+      - name: Generates xcworkspace
+        run: ./geunsu/ProjectUtils/generate_xcodeprojs.sh
+      - name: Build and test
+        run: |
+          cd geunsu/Apps/ModernAppStore
+          xcodebuild clean build test \
+          -workspace ModernAppStore.xcworkspace \
+          -scheme ModernAppStore-Workspace \
+          -destination "platform=iOS Simulator,name=iPhone 13" \
+          -configuration Debug
