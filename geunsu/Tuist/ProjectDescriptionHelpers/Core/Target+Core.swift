@@ -16,7 +16,12 @@ public extension Target {
         }
         
         private static let common: [Target] = .createTargets(name: "Common")
-        private static let networkClient: [Target] = .createTargets(name: "NetworkClient")
+        private static let networkClient: [Target] = .createTargets(
+            name: "NetworkClient",
+            dependencies: [
+                .target(name: "Common")
+            ]
+        )
     }
     
 }
