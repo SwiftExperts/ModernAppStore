@@ -8,29 +8,85 @@
 import XCTest
 @testable import NetworkClient
 
+extension API.Response {
+    
+    struct TestResponse: Codable, Equatable {
+        let intValue: Int
+        let optionaIntValue: Int?
+        let stringValue: String
+        let stringArray: [String]
+        
+        init(
+            intValue: Int,
+            optionaIntValue: Int?,
+            stringValue: String,
+            stringArray: [String]
+        ) {
+            self.intValue = intValue
+            self.optionaIntValue = optionaIntValue
+            self.stringValue = stringValue
+            self.stringArray = stringArray
+        }
+    }
+    
+}
+
 final class NetworkClientTests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        try super.setUpWithError()
+        
+        NetworkClientStubContainer.removeAll()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        try super.tearDownWithError()
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func test🌱with_jsonObject👉register_and_request🚀validate_response() async throws {
+        // Given
+        let request = MockURLConvertable()
+        let jsonObject: [String : Any] = [
+            "intValue" : 1,
+            "stringValue" : "test",
+            "stringArray" : ["test1", "test2"]
+        ]
+        
+        // When
+        NetworkClientStubContainer.register(urlConvertable: request, stub: .json(jsonObject))
+        let response = try await NetworkClient<MockURLConvertable, API.Response.TestResponse>(request).request()
+        
+        // Then
+        let expectedResponse = API.Response.TestResponse(
+            intValue: 1,
+            optionaIntValue: nil,
+            stringValue: "test",
+            stringArray: ["test1", "test2"]
+        )
+        
+        XCTAssertEqual(response, expectedResponse)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func test🌱with_jsonData👉register_and_request🚀validate_response() async throws {
+        // Given
+        let request = MockURLConvertable()
+        let jsonData = Bundle(for: NetworkClientTests.self).url(forResource: "mock_response", withExtension: "json")
+            .flatMap { try? Data(contentsOf: $0) }
+            .unwrapForced()
+        
+        // When
+        NetworkClientStubContainer.register(urlConvertable: request, stub: .jsonData(jsonData))
+        let response = try await NetworkClient<MockURLConvertable, API.Response.TestResponse>(request).request()
+        
+        // Then
+        let expectedResponse = API.Response.TestResponse(
+            intValue: 10,
+            optionaIntValue: 100,
+            stringValue: "test test",
+            stringArray: ["test1", "test2"]
+        )
+        
+        XCTAssertEqual(response, expectedResponse)
     }
 
 }

@@ -1,0 +1,9 @@
+{
+    "intValue" : 10,
+    "optionaIntValue" : 100,
+    "stringValue" : "test test",
+    "stringArray" : [
+        "test1",
+        "test2"
+    ]
+}
