@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import AppStoreSearch
 
 @main
 struct ModernAppStoreApp: App {
+    @StateObject var imageStore = ImageStore()
     var body: some Scene {
         WindowGroup {
             HomeContainerView()
+                .environmentObject(imageStore)
         }
     }
 }

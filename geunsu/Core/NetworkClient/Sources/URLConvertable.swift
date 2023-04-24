@@ -29,7 +29,11 @@ extension URLConvertable {
                     return URLRequest(url: $0)
                 }
                 
-                return URLRequest(url: $0.appending(queryItems: queries.map { URLQueryItem(name: $0, value: $1) }))
+                return URLRequest(url: $0.appending(
+                    queryItems: queries
+                        .sorted(by: { $0.key < $1.key })
+                        .map { URLQueryItem(name: $0, value: $1) }
+                ))
             }
     }
     
