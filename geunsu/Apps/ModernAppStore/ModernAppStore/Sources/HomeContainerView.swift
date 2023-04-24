@@ -26,7 +26,7 @@ struct HomeContainerView: View {
                     Text("앱")
                 }
                 .tag(HomeSection.feed)
-            AppStoreSearchView()
+            SearchHomeView()
                 .tabItem {
                     Image(systemName: "magnifyingglass")
                     Text("검색")

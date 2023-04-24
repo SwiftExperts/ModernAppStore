@@ -8,12 +8,28 @@
 
 import Foundation
 import Common
+import OSLog
 
 public enum NetworkClientError: Error {
     case requestCreationFailed
     case badResponse
     case decodeFailure
     case stubDecodeFailure
+}
+
+extension NetworkClientError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .requestCreationFailed:
+            return "Creating request failed"
+        case .badResponse:
+            return "Get bad response"
+        case .decodeFailure:
+            return "Decoding data failed"
+        case .stubDecodeFailure:
+            return "Stub decoding failed"
+        }
+    }
 }
 
 public struct NetworkClient<
@@ -46,6 +62,15 @@ public struct NetworkClient<
             guard (response as? HTTPURLResponse)?.statusCode == 200 else {
                 throw NetworkClientError.badResponse
             }
+            
+            if let jsonString = String(data: data, encoding: .utf8) {
+                Logger().debug("""
+                [NetworkClient]
+                Data from request >> \(request.toURLString() ?? "❗Empty Request")
+                \(jsonString)
+                """)
+            }
+            
             
             return try JSONDecoder().decode(NetworkResponse.self, from: data)
         } catch {

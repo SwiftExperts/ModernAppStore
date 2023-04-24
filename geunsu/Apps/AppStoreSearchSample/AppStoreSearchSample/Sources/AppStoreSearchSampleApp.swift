@@ -10,9 +10,12 @@ import AppStoreSearch
 
 @main
 struct AppStoreSearchSampleApp: App {
+    
+    @StateObject var imageStore = ImageStore()
     var body: some Scene {
         WindowGroup {
-            AppStoreSearchView()
+            SearchHomeView()
+                .environmentObject(imageStore)
         }
     }
 }
